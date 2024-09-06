@@ -8,7 +8,7 @@ const client = new MongoClient(uri);
 app.get('/consultants', async (req, res) => {
   try {
     await client.connect();
-    const database = client.db('your-database-name');
+    const database = client.db('consultants-db');
     const collection = database.collection('consultants');
     const consultants = await collection.find().toArray();
     res.json(consultants);
