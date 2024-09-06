@@ -1,23 +1,24 @@
 const express = require('express');
+const { MongoClient } = require('mongodb');
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const uri = "mongodb://back-demo-001-server:u7I0FGnwNeP2VKwy6e5AMo5FKNWAfxXTyLwIAnM4j9LHqDQF125pK4PSnwLqi8ReQYrSDi5PS5rZACDb5G8QYA==@back-demo-001-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@back-demo-001-server@";
+const client = new MongoClient(uri);
+
+app.get('/consultants', async (req, res) => {
+  try {
+    await client.connect();
+    const database = client.db('your-database-name');
+    const collection = database.collection('consultants');
+    const consultants = await collection.find().toArray();
+    res.json(consultants);
+  } catch (error) {
+    res.status(500).send('Error retrieving consultants');
+  } finally {
+    await client.close();
+  }
 });
 
-
-app.get('/consultants', (req, res) => {
-  const consultants = [
-    { id: 1, firstName: 'John', lastName: 'Doe', CIN: 'A123456' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', CIN: 'B654321' },
-    { id: 3, firstName: 'Sam', lastName: 'Green', CIN: 'C987654' },
-  ];
-  res.json(consultants);
-});
-
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server is running');
 });
