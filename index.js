@@ -19,6 +19,25 @@ app.get('/consultants', async (req, res) => {
   }
 });
 
+
+app.get('/consultants/:id', async (req, res) => {
+  try {
+    await client.connect();
+    const database = client.db('your-database-name');
+    const collection = database.collection('consultants');
+    const consultant = await collection.findOne({ _id: parseInt(req.params.id) });
+    if (consultant) {
+      res.json(consultant);
+    } else {
+      res.status(404).send('Consultant not found');
+    }
+  } catch (error) {
+    res.status(500).send('Error retrieving consultant');
+  } finally {
+    await client.close();
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('Server is running');
 });
