@@ -21,6 +21,11 @@ app.get('/consultants', async (req, res) => {
 });
 
 
+app.get('/health-check', async (req, res) => {
+   res.status(202).send('OK')
+});
+
+
 app.get('/consultants/:id', async (req, res) => {
   try {
     await client.connect();
