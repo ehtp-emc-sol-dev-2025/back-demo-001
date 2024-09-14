@@ -17,11 +17,6 @@ app.get('/consultants', (req, res) => {
 });
 
 
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
 
 
 app.get('/health-check', async (req, res) => {
