@@ -7,9 +7,9 @@ app.get('/', (req, res) => {
 
 
 const consultants = [
-    { id: 1, firstName: 'John', lastName: 'Doe', CIN: 'A123456' },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', CIN: 'B654321' },
-    { id: 3, firstName: 'Sam', lastName: 'Green', CIN: 'C987654' },
+    { "id" : 1, "firstName" : "John", "lastName" : "Doe", "CIN" : "A123456", "skills" : [ "Java", "Python", "Azure" ] },
+    { "id" : 2, "firstName" : "Jane", "lastName" : "Smith", "CIN" : "B654321", "skills" : [ "JavaScript", "React", "Node.js" ] },
+    { "id" : 3, "firstName" : "Sam", "lastName" : "Green", "CIN" : "C987654", "skills" : [ "SQL", "MongoDB", "Docker" ] }
   ];
 
 app.get('/consultants', (req, res) => {
