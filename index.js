@@ -22,6 +22,9 @@ const redisClient = redis.createClient({
   host: REDIS_HOST,
   port: REDIS_PORT,
   password: REDIS_PASSWORD,
+  tls: {
+    servername: REDIS_HOST, // Required for SSL connection
+  },
 });
 
 redisClient.on('error', (err) => {
