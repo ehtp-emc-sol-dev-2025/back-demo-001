@@ -8,22 +8,28 @@ const DATABASE_NAME = 'consultants-db';
 
 app.get('/consultants', async (req, res) => {
   try {
+    console.log('Info: /consultants endpoint was called');
     await client.connect();
+    console.debug('Verbose: Connected to the database');
     const database = client.db(DATABASE_NAME);
     const collection = database.collection('consultants');
     const consultants = await collection.find().toArray();
     res.json(consultants);
   } catch (error) {
     res.status(500).send('Error retrieving consultants');
+    console.error('Error: Failed to retrieve consultants', error);
   } finally {
     await client.close();
+     console.warn('Warning: Database connection closed');
   }
 });
 
 
 app.get('/consultants/:id', async (req, res) => {
   try {
+    console.log(`Info: /consultants/${req.params.id} endpoint was called`);
     await client.connect();
+    console.debug('Verbose: Connected to the database');
     const database = client.db(DATABASE_NAME);
     const collection = database.collection('consultants');
     const consultant = await collection.findOne({ _id: parseInt(req.params.id) });
@@ -36,6 +42,7 @@ app.get('/consultants/:id', async (req, res) => {
     res.status(500).send('Error retrieving consultant');
   } finally {
     await client.close();
+    console.warn('Warning: Database connection closed');
   }
 });
 
