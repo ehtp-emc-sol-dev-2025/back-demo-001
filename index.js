@@ -37,8 +37,8 @@ const redisClient = createClient({
     }
 });
 
-await redisClient.connect();
-console.log('Connected to Redis');
+redisClient.connect();
+console.log('Connected to Redis'); 
 
 
 app.listen(process.env.PORT || 3000, () => {
