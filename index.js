@@ -28,11 +28,19 @@ redisClient.on('error', (err) => {
   console.error('Redis Client Error', err);
 });
 
-const { promisify } = require('util');
 
-// Promisify Redis methods for async/await
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const setexAsync = promisify(redisClient.setex).bind(redisClient);
+(async () => {
+  try {
+    await redisClient.connect();
+    console.log('Connected to Redis');
+
+    app.listen(process.env.PORT || 3000, () => {
+      console.log('Server is running');
+    });
+  } catch (error) {
+    console.error('Failed to connect to Redis:', error);
+  }
+})();
 
 //Database conf
 const uri = "mongodb://back-demo-001-server:u7I0FGnwNeP2VKwy6e5AMo5FKNWAfxXTyLwIAnM4j9LHqDQF125pK4PSnwLqi8ReQYrSDi5PS5rZACDb5G8QYA==@back-demo-001-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@back-demo-001-server@";
@@ -42,8 +50,8 @@ const DATABASE_NAME = 'consultants-db';
 app.get('/consultants', async (req, res) => {
   try {
     // Check if data is in cache
-    const cachedConsultants = await getAsync('consultants');
-
+    const cachedConsultants = await redisClient.get('consultants');
+    
     if (cachedConsultants) {
       // Data found in cache
       console.log('Fetching data from Redis cache');
@@ -56,9 +64,10 @@ app.get('/consultants', async (req, res) => {
       const consultants = await collection.find().toArray();
 
       // Save data to Redis and set expiration
-      await setexAsync('consultants', 7200, JSON.stringify(consultants)); // Cache for 2 hours
+      await redisClient.setEx('consultants', 7200, JSON.stringify(consultants)); // Cache for 2 hours
 
       console.log('Fetching data from database and storing in cache');
+      
       res.json(consultants);
     }
   } catch (error) {
@@ -77,7 +86,7 @@ app.get('/consultants/:id', async (req, res) => {
     const cacheKey = `consultant:${consultantId}`;
 
     // Check cache
-    const cachedConsultant = await getAsync(cacheKey);
+    const cachedConsultant = await redisClient.get(cacheKey);
 
     if (cachedConsultant) {
       // Data found in cache
@@ -92,9 +101,10 @@ app.get('/consultants/:id', async (req, res) => {
 
       if (consultant) {
         // Save to cache
-        await setexAsync(cacheKey, 7200, JSON.stringify(consultant)); // Cache for 2 hours
+        await redisClient.setEx(cacheKey, 7200, JSON.stringify(consultant)); // Cache for 2 hours
 
         console.log(`Fetching consultant ${consultantId} from database and storing in cache`);
+        
         res.json(consultant);
       } else {
         res.status(404).send('Consultant not found');
@@ -108,6 +118,4 @@ app.get('/consultants/:id', async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  logger.info('Server is running');
-});
+
