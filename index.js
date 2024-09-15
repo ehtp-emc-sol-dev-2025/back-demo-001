@@ -11,19 +11,56 @@ const logger = winston.createLogger({
   ],
 });
 
+//Redis conf
+const redis = require('redis');
+
+const REDIS_HOST = 'emc2-ehtp-redis-demo.redis.cache.windows.net'; // e.g., mycache.redis.cache.windows.net
+const REDIS_PORT = 6380; // Use the SSL port
+const REDIS_PASSWORD = 'KvMOX9U4Q4R83KanH42Tx62ia6E3oew7VAzCaNUky9Y=';
+
+const redisClient = redis.createClient({
+  host: REDIS_HOST,
+  port: REDIS_PORT,
+  password: REDIS_PASSWORD,
+});
+
+redisClient.on('error', (err) => {
+  console.error('Redis Client Error', err);
+});
+
+const { promisify } = require('util');
+
+// Promisify Redis methods for async/await
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const setexAsync = promisify(redisClient.setex).bind(redisClient);
+
+//Database conf
 const uri = "mongodb://back-demo-001-server:u7I0FGnwNeP2VKwy6e5AMo5FKNWAfxXTyLwIAnM4j9LHqDQF125pK4PSnwLqi8ReQYrSDi5PS5rZACDb5G8QYA==@back-demo-001-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@back-demo-001-server@";
 const client = new MongoClient(uri);
 const DATABASE_NAME = 'consultants-db'; 
 
 app.get('/consultants', async (req, res) => {
   try {
-    logger.info('Info: /consultants endpoint was called');
-    await client.connect();
-    logger.verbose('Verbose: Connected to the database');
-    const database = client.db(DATABASE_NAME);
-    const collection = database.collection('consultants');
-    const consultants = await collection.find().toArray();
-    res.json(consultants);
+    // Check if data is in cache
+    const cachedConsultants = await getAsync('consultants');
+
+    if (cachedConsultants) {
+      // Data found in cache
+      console.log('Fetching data from Redis cache');
+      res.json(JSON.parse(cachedConsultants));
+    } else {
+      // Data not in cache; fetch from database
+      await client.connect();
+      const database = client.db(DATABASE_NAME);
+      const collection = database.collection('consultants');
+      const consultants = await collection.find().toArray();
+
+      // Save data to Redis and set expiration
+      await setexAsync('consultants', 7200, JSON.stringify(consultants)); // Cache for 2 hours
+
+      console.log('Fetching data from database and storing in cache');
+      res.json(consultants);
+    }
   } catch (error) {
     res.status(500).send('Error retrieving consultants');
     logger.error('Error: Failed to retrieve consultants', error);
@@ -36,17 +73,32 @@ app.get('/consultants', async (req, res) => {
 
 app.get('/consultants/:id', async (req, res) => {
   try {
-    logger.info(`Info: /consultants/${req.params.id} endpoint was called`);
-    await client.connect();
-    logger.verbose('Verbose: Connected to the database');
-    const database = client.db(DATABASE_NAME);
-    const collection = database.collection('consultants');
-    const consultant = await collection.findOne({ _id: parseInt(req.params.id) });
-    if (consultant) {
-      res.json(consultant);
+  const consultantId = req.params.id;
+    const cacheKey = `consultant:${consultantId}`;
+
+    // Check cache
+    const cachedConsultant = await getAsync(cacheKey);
+
+    if (cachedConsultant) {
+      // Data found in cache
+      console.log(`Fetching consultant ${consultantId} from Redis cache`);
+      res.json(JSON.parse(cachedConsultant));
     } else {
-      logger.warn('Consultant not found');
-      res.status(404).send('Consultant not found');
+      // Data not in cache; fetch from database
+      await client.connect();
+      const database = client.db(DATABASE_NAME);
+      const collection = database.collection('consultants');
+      const consultant = await collection.findOne({ _id: parseInt(consultantId) });
+
+      if (consultant) {
+        // Save to cache
+        await setexAsync(cacheKey, 7200, JSON.stringify(consultant)); // Cache for 2 hours
+
+        console.log(`Fetching consultant ${consultantId} from database and storing in cache`);
+        res.json(consultant);
+      } else {
+        res.status(404).send('Consultant not found');
+      }
     }
   } catch (error) {
     res.status(500).send('Error retrieving consultant');
