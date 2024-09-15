@@ -20,25 +20,29 @@ const REDIS_PASSWORD = 'KvMOX9U4Q4R83KanH42Tx62ia6E3oew7VAzCaNUky9Y=';
 
 
 
-const redisClient = redis.createClient({
-  socket: {
-    host: REDIS_HOST,
-    port: REDIS_PORT,
-    tls: true, // Enable SSL/TLS for secure connection to Azure Redis
-  },
-  password: REDIS_PASSWORD,
-});
+
 
 redisClient.on('error', (err) => {
   console.error('Redis Client Error', err);
 });
 
 
+
+const redisClient = createClient({
+    password: REDIS_PASSWORD, // use your password here
+    socket: {
+        host: REDIS_PASSWORD,
+        port: 6379,
+        tls: false
+    }
+});
+
+await redisClient.connect();
+console.log('Connected to Redis');
+
+
 (async () => {
   try {
-    await redisClient.connect();
-    console.log('Connected to Redis');
-
     app.listen(process.env.PORT || 3000, () => {
       console.log('Server is running');
     });
