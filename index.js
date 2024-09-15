@@ -18,13 +18,15 @@ const REDIS_HOST = 'emc2-ehtp-redis-demo.redis.cache.windows.net'; // e.g., myca
 const REDIS_PORT = 6380; // Use the SSL port
 const REDIS_PASSWORD = 'KvMOX9U4Q4R83KanH42Tx62ia6E3oew7VAzCaNUky9Y=';
 
+
+
 const redisClient = redis.createClient({
-  host: REDIS_HOST,
-  port: REDIS_PORT,
-  password: REDIS_PASSWORD,
-  tls: {
-    servername: REDIS_HOST, // Required for SSL connection
+  socket: {
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    tls: true, // Enable SSL/TLS for secure connection to Azure Redis
   },
+  password: REDIS_PASSWORD,
 });
 
 redisClient.on('error', (err) => {
