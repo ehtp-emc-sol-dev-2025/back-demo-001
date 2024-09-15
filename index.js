@@ -14,7 +14,7 @@ const logger = winston.createLogger({
 
 // Redis configuration
 const REDIS_HOST = 'emc2-ehtp-redis-demo.redis.cache.windows.net'; 
-const REDIS_PORT = 6379; 
+const REDIS_PORT = 6380; 
 const REDIS_PASSWORD = 'KvMOX9U4Q4R83KanH42Tx62ia6E3oew7VAzCaNUky9Y=';
 
 const redisClient = redis.createClient({
@@ -22,7 +22,7 @@ const redisClient = redis.createClient({
   socket: {
     host: REDIS_HOST,
     port: REDIS_PORT,
-    tls: false
+    tls: true
   }
 });
 
