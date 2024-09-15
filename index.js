@@ -11,7 +11,7 @@ const logger = winston.createLogger({
   ],
 });
 
-//Redis conf
+//Redis configuration
 const redis = require('redis');
 
 const REDIS_HOST = 'emc2-ehtp-redis-demo.redis.cache.windows.net'; // e.g., mycache.redis.cache.windows.net
