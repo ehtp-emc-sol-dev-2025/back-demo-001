@@ -41,15 +41,9 @@ await redisClient.connect();
 console.log('Connected to Redis');
 
 
-(async () => {
-  try {
-    app.listen(process.env.PORT || 3000, () => {
-      console.log('Server is running');
-    });
-  } catch (error) {
-    console.error('Failed to connect to Redis:', error);
-  }
-})();
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running');
+});
 
 //Database conf
 const uri = "mongodb://back-demo-001-server:u7I0FGnwNeP2VKwy6e5AMo5FKNWAfxXTyLwIAnM4j9LHqDQF125pK4PSnwLqi8ReQYrSDi5PS5rZACDb5G8QYA==@back-demo-001-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@back-demo-001-server@";
