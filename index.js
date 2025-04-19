@@ -1,44 +1,62 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
 const app = express();
 
-const uri = "mongodb://back-demo-001-server:u7I0FGnwNeP2VKwy6e5AMo5FKNWAfxXTyLwIAnM4j9LHqDQF125pK4PSnwLqi8ReQYrSDi5PS5rZACDb5G8QYA==@back-demo-001-server.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@back-demo-001-server@";
-const client = new MongoClient(uri);
-const DATABASE_NAME = 'consultants-db'; 
-
-app.get('/consultants', async (req, res) => {
-  try {
-    await client.connect();
-    const database = client.db(DATABASE_NAME);
-    const collection = database.collection('consultants');
-    const consultants = await collection.find().toArray();
-    res.json(consultants);
-  } catch (error) {
-    res.status(500).send('Error retrieving consultants');
-  } finally {
-    await client.close();
-  }
-});
-
-
-app.get('/consultants/:id', async (req, res) => {
-  try {
-    await client.connect();
-    const database = client.db(DATABASE_NAME);
-    const collection = database.collection('consultants');
-    const consultant = await collection.findOne({ _id: parseInt(req.params.id) });
-    if (consultant) {
-      res.json(consultant);
-    } else {
-      res.status(404).send('Consultant not found');
+app.get('/consultants', (req, res) => {
+  const syllabus = [
+    {
+      id: 1,
+      title: "Aperçu global sur les démarches et tendances de développement de solutions et services informatiques",
+      description: "Introduction aux tendances actuelles et démarches agiles dans le développement de solutions cloud."
+    },
+    {
+      id: 2,
+      title: "Développement d’applications & Cloud : options, avantages et process",
+      description: "Exploration des options, avantages et processus pour développer des applications dans le cloud."
+    },
+    {
+      id: 3,
+      title: "Développement et déploiement d’applications web sur le Cloud",
+      description: "Techniques pour développer et déployer des applications web sur Azure."
+    },
+    {
+      id: 4,
+      title: "Déploiement et Gestion des Conteneurs",
+      description: "Utilisation de conteneurs avec Docker et orchestration via Azure Kubernetes Service (AKS)."
+    },
+    {
+      id: 5,
+      title: "Développement d'API",
+      description: "Conception, gestion et sécurisation d'APIs RESTful avec Azure API Management."
+    },
+    {
+      id: 6,
+      title: "Fonctions & logiques métiers sous Cloud",
+      description: "Création de fonctions serverless et logiques métiers avec Azure Functions et Logic Apps."
+    },
+    {
+      id: 7,
+      title: "Gestion et automatisation des workflows",
+      description: "Automatisation des flux de travail avec Azure Logic Apps et Event Grid."
+    },
+    {
+      id: 8,
+      title: "Optimisation avec le Cache Redis",
+      description: "Utilisation d'Azure Cache for Redis pour optimiser les performances des applications."
+    },
+    {
+      id: 9,
+      title: "Surveillance, monitoring et suivi des performances des applications Cloud",
+      description: "Mise en place de la surveillance avec Azure Monitor et Application Insights."
+    },
+    {
+      id: 10,
+      title: "Préparation du certificat : Microsoft Azure Developer Associate (AZ-204)",
+      description: "Préparation à l'examen AZ-204 avec révision et projets pratiques."
     }
-  } catch (error) {
-    res.status(500).send('Error retrieving consultant');
-  } finally {
-    await client.close();
-  }
+  ];
+  res.json(syllabus);
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log('Server is running');
+  console.log('Server running');
 });
