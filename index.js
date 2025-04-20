@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+
 // Données des consultants en cybersécurité
 const consultants = [
     {
@@ -30,4 +31,7 @@ app.get('/consultants', (req, res) => {
     res.json(consultants);
 });
 
-module.exports = app;
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running');
+});
+
