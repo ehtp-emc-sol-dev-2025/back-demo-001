@@ -6,7 +6,7 @@ const app = express();
 
 app.get('/syllabus', (req, res) => { 
 
-  const consultants = [ 
+  const syllabus = [ 
 
     { id: 1, firstName: 'Ahmed', lastName: 'El Haddad', CIN: 'A123456' }, 
 
@@ -14,7 +14,7 @@ app.get('/syllabus', (req, res) => {
 
   ]; 
 
-  res.json(consultants); 
+  res.json(syllabus); 
 
 }); 
 
