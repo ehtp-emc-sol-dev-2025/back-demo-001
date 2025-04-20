@@ -1,3 +1,10 @@
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://salmon-stone-067342103.6.azurestaticapps.net');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
+
 const express = require('express'); 
 
 const app = express(); 
