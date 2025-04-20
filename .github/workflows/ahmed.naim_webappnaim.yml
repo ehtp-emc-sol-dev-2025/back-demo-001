@@ -1,12 +1,12 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - WEBAPPNAIM
+name: Build and deploy Node.js app to Azure Web App - BackendKenza
 
 on:
   push:
     branches:
-      - ahmed.naim
+      - kanza.tahrijoutey
   workflow_dispatch:
 
 jobs:
@@ -26,7 +26,8 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          
+          npm run build --if-present
+
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
 
@@ -56,7 +57,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'WEBAPPNAIM'
+          app-name: 'BackendKenza'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_20FE5244FC8C4CEDA745EC7106925C0F }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DEB6B2FDC186411EBE7F10B681050D95 }}
