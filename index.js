@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-app.get('/consultants', (req, res) => {
+app.get('/sylabus', (req, res) => {
   const syllabus = [
     {
       id: 1,
