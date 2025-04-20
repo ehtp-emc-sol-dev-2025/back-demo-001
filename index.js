@@ -2,7 +2,6 @@ const express = require('express');
 
 const app = express(); 
 
-
 app.get('/consultants', (req, res) => { 
 
   const consultants = [ 
