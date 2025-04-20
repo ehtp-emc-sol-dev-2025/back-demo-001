@@ -1,29 +1,42 @@
+const express = require('express');
+const app = express();
 
+// Données des joueurs
+const joueurs = [
+    { nom: "Yassine Bounou", poste: "Gardien de but" },
+    { nom: "Achraf Hakimi", poste: "Défenseur droit" },
+    { nom: "Romain Saïss", poste: "Défenseur central" },
+    { nom: "Sofyan Amrabat", poste: "Milieu défensif" },
+    { nom: "Hakim Ziyech", poste: "Milieu offensif" }
+];
 
-const express = require('express'); 
+const titulaires = [
+    { nom: "Yassine Bounou", poste: "Gardien de but" },
+    { nom: "Achraf Hakimi", poste: "Défenseur droit" },
+    { nom: "Nayef Aguerd", poste: "Défenseur central" },
+    { nom: "Sofyan Amrabat", poste: "Milieu défensif" },
+    { nom: "Azzedine Ounahi", poste: "Milieu central" }
+];
 
-const app = express(); 
+const remplacants = [
+    { nom: "Munir Mohamedi", poste: "Gardien de but" },
+    { nom: "Jawad El Yamiq", poste: "Défenseur central" },
+    { nom: "Yahya Jabrane", poste: "Milieu défensif" },
+    { nom: "Abdelhamid Sabiri", poste: "Milieu offensif" },
+    { nom: "Abderrazak Hamdallah", poste: "Attaquant" }
+];
 
- 
+// Endpoints
+app.get('/joueurs', (req, res) => {
+    res.json(joueurs);
+});
 
-app.get('/syllabus', (req, res) => { 
+app.get('/titulaires', (req, res) => {
+    res.json(titulaires);
+});
 
-  const syllabus = [ 
+app.get('/remplacants', (req, res) => {
+    res.json(remplacants);
+});
 
-    { id: 1, firstName: 'Ahmed', lastName: 'El Haddad', CIN: 'A123456' }, 
-
-    { id: 2, firstName: 'Fatima', lastName: 'Ben Ali', CIN: 'B654321' } 
-
-  ]; 
-
-  res.json(syllabus); 
-
-}); 
-
- 
-
-app.listen(process.env.PORT || 3000, () => { 
-
-  console.log('Server running'); 
-
-}); 
+module.exports = app;
