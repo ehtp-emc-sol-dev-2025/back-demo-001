@@ -1,14 +1,14 @@
-{
+.{
 
   "name": "back-demo-001",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "hl"
+  "author": "ahmed.benmassaouda"
     "scripts": {
       "start": "node index.js",
     
     },
-    "author": "hlechgar",
+    "author": "ahmed.benmassaouda",
     "license": "ISC",
     "description": "",
     "dependencies": {
