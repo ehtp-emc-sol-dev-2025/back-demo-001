@@ -2,8 +2,7 @@
 
   "name": "back-demo-001",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "ahmed.benmassaouda"
+  "main": "index.js"
     "scripts": {
       "start": "node index.js",
     
