@@ -4,7 +4,7 @@ const app = express();
 
  
 
-app.get('/consultants', (req, res) => { 
+app.get('/sylabus', (req, res) => { 
 
   const consultants = [ 
 
