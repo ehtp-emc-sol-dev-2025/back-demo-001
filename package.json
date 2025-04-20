@@ -1,13 +1,13 @@
 {
-
-  "name": "back-demo-001",
-  "version": "1.0.0",
-  "main": "index.js"
+    "name": "back-demo-001",
+    "version": "1.0.0",
+    "main": "index.js",
     "scripts": {
       "start": "node index.js",
-    
-    },
-    "author": "ahmed.benmassaouda",
+"test": "echo \"No tests yet\""
+
+     },
+    "author": "hlechgar",
     "license": "ISC",
     "description": "",
     "dependencies": {
