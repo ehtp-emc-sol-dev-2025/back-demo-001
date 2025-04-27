@@ -1,6 +1,14 @@
 const express = require('express');
 const app = express();
 
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'UP',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
 app.get('/consultants', (req, res) => {
   const syllabus = [
     {
